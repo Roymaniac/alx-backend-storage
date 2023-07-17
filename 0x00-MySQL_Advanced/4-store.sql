@@ -1,18 +1,5 @@
-DELIMITER //
-CREATE TRIGGER decrease_item_quantity
+-- creates a trigger that decreases the quantity of an item after adding a new order
+CREATE TRIGGER buy_trigger
 AFTER INSERT ON orders
 FOR EACH ROW
-BEGIN
-    -- Calculate the total quantity of items in the order
-    DECLARE total_quantity INT;
-    SELECT SUM(quantity) INTO total_quantity
-    FROM orders
-    WHERE item_id = NEW.item_id;
-
-    -- Update the quantity of the corresponding item in the 'items' table
-    UPDATE items
-    SET quantity = quantity - total_quantity
-    WHERE id = NEW.item_id;
-END;
-//
-DELIMITER ;
+UPDATE items SET quantity = quantity - NEW.number WHERE name = NEW.item_name;
